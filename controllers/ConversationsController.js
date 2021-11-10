@@ -1,5 +1,6 @@
 const AppController = require("./AppController.js");
 const Events = require("../utils/events.js")
+const clientSockets = require("../models/Socket.js");
 const Conversation = require("../models/Conversation.js");
 
 class ConversationsController extends AppController {
@@ -22,6 +23,9 @@ class ConversationsController extends AppController {
                 });
 
                 conversation.save().then((savedConversation) => {
+                    if (payload.username in clientSockets) clientSockets[payload.username].emit(Events.CONVERSATION_CREATED, conversation);
+                    if (username in clientSockets) clientSockets[username].emit(Events.CONVERSATION_CREATED, conversation);
+
                     return this.callback({
                         code: "SUCCESS",
                         data: {
@@ -32,10 +36,6 @@ class ConversationsController extends AppController {
                     });
                 });
             } else {
-
-
-                console.log(conversation);
-
                 return this.callback({
                     code: "SUCCESS",
                     data: {
