@@ -1,5 +1,6 @@
 {
   "name": "Messenger-Clone-Base",
+  "author": "MoulmanDev",
   "version": "0.0.1",
   "description": "Clone of messenger",
   "main": "server.js",
@@ -12,6 +13,7 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.12",
+    "mongoose-sequence": "^5.3.1",
     "mongoose-type-email": "^1.1.2",
     "socket.io": "^4.3.1"
   },
@@ -21,7 +23,6 @@
   "license": "MIT",
   "keywords": [
     "node",
-    "glitch",
     "express"
   ]
 }

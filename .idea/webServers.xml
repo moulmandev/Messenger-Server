@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="0cd8ecab-42ef-4d0b-abf3-c8bee7e5e212" name="ovh">
+        <fileTransfer rootFolder="/home/moulman/Messenger-Server" accessType="SFTP" host="ts.dreamfire.fr" port="22" sshConfigId="c0230485-d508-4aa1-80c7-dab0ea426cdf" sshConfig="root@ts.dreamfire.fr:22 key" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
