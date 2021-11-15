@@ -1,6 +1,4 @@
-const UsersController = require("../controllers/UsersController.js");
-const ConversationsController = require("../controllers/ConversationsController.js");
-const MessagesController = require("../controllers/MessagesController.js");
+const clientSockets = require("../models/Socket");
 
 class Events {
     static eventList = {

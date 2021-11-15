@@ -34,29 +34,9 @@ Je vous laisserai trouver chaque contenu des schémas.
 
 ### 2.1 Création d'un utilisateur en base de données *(5 pts)*
 
-Lors de la première connexion d'un utilisateur, ce dernier rentre son nom et son mot de passe. 
-S'il existe, alors l'utilisateur est connecté, s'il n'existe pas, nous allons le créer dans ce cas. 
-
 ### 2.2 Attribution d'un token d'authentification *(10 pts)*
 
-Vous allez devoir générer un token pour un utilisateur lorsqu'il se connecte. Vous pouvez utiliser la librairie jwt (jsonwebtoken) vu précédemment dans les TDs.
-
-Ce token sera envoyé à chaque requête du client au serveur, et c'est ce qui nous permettra d'identifier quel utilisateur nous fait une requête.
-Vous pouvez le stocker en base de données si nécéssaire.
-
-### 2.3 Autres informations
-
-Une fois sur la page principale, l'utilisateur peut voir toutes les personnes disponibles sur l'application. Il peut ensuite décider d'en choisir une ou plus pour créer une conversation. 
-
-Lorsque la conversation est crée, chaque participant peut décider d'ajouter ou de retirer un autre participant. 
-
-Bien entendu, chaque participant peuvent envoyer des messages, les éditer ou les supprimer, et également réagir à chaque message. 
-
 ## 3. Communication avec le client *(30 pts)*
-
-Puisque nous travaillons avec un client qui n'est pas fait par vos soins, je vais vous donner les informations qui sont envoyés par ce dernier à chaque évènements. 
-
-Vous allez devoir traiter les informations envoyées par le client, effectuer le traitement du serveur, puis lui renvoyer les données. 
 
 ### 3.1 Les codes de retour
 
@@ -71,118 +51,11 @@ Lors de votre réponse, vous devrez préciser un code dans votre message de reto
 
 ### 3.2 Contenu de la réponse envoyé au client
 
-Chaque réponse envoyée au client sera au format JSON, vous aurez donc un corps de réponse qui sera tout le temps similaire au suivant: 
-
-```json
-{
-    "code": "SUCCESS",
-    "data": {...}
-}
-```
-
-### 3.3 La liste des évènements à écouter
-
-Chaque évènement de socket que vous allez écouter contiendra un objet de données, permettant au client & au serveur de communiquer correctement. Il y a également une callback de retour, qui nous permet d'envoyer directement au client le retour de sa requête. 
-
-
-Vous allez devoir écouter les évènements de la manière qui suit: 
-
-```js
-// /!\ Pensez bien au @ devant chaque évènement, c'est la nomenclature du client ! 
-socket.on("@evenement", ({data}, callback) => {
-    //Traitement
-
-    //Réponse à envoyer
-    callback({code: "SUCCESS", data: {...}});
-});
-
-```
-
 #### 3.3.1 Authentification *(2 pts)*
-
-Lors de l'authentification, le client nous envoie une requête socket, nommée **authenticate**. 
-
-Le corps de la requête est comme suit: 
-
-```json
-{
-    "username":"John",
-    "password":"123456"
-}
-``` 
-
-Le traitement de cette requête doit permettre à l'utilisateur de se connecter, et s'il ne s'est jamais connecté auparavant, de créer son compte.
-C'est à ce moment que l'on va créer l'utilisateur dans la base de données Mongo.
-
-Le client s'attends à une réponse avec l'objet data suivant: 
-
-```json
-{
-    "username":"John",
-    "token": "monsupertokendauthentification",
-    "picture_url": "https://lelienversmasuperphotodeprofile.fr"
-}
-```
 
 #### 3.3.2 Récupération de la liste d'utilisateurs *(2 pts)*
 
-La requête est du nom suivant: **getUsers**. 
-
-Le corps de la requête est comme suit: 
-
-```json
-{
-    "token":"monsupertokenjevousl'aipasdéjàditqu'ilétaitbienmontoken?"
-}
-``` 
-
-Le traitement sert à récupérer la liste des utilisateurs présents dans la conversation.
-Il vous faudra accéder a la base MongoDB et récupérer tout les utilisateurs.
-
-Le client s'attends à une réponse sous ce format:
-
-```json
-{
-    "users": [
-        {"username": "JohnToujours", "picture_url":"https://vousavezcompris", "awake": true},
-        ...
-    ]
-}
-``` 
-
 #### 3.3.3 Récupération ou création d'un conversation one to one *(4 pts)*
-
-La requête est du nom suivant: **getOrCreateOneToOneConversation**. 
-
-Le corps de la requête est comme suit: 
-
-```json
-{
-    "token":"cmontoken",
-    "username":"Jane"
-}
-``` 
-
-Permet de créer une conversation avec 1 autre personne. 
-L'objet Conversation devra être crée en base de données. 
-
-La réponse attendue: 
-
-```json
-{
-    "conversation": {
-        "id":1,
-        "type":"one_to_one",
-        "participants": ["John", "Jane"],
-        "messages": [{...}],
-        "title": "Cmaconversation",
-        "theme": "BLUE",
-        "updated_at": "1995-12-17T03:24:00",
-        "seen": {},
-        "typing": {}
-    }
-}
-```
 
 #### 3.3.4 Récupération ou création d'un conversation many to many *(4 pts)*
 

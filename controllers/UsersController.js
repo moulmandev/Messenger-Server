@@ -5,7 +5,7 @@ const AppController = require("./AppController.js");
 const config = require("../config.js");
 const picture =  require("../utils/pictures.js")
 const User = require("../models/User");
-const clientSockets = require("../models/Socket");
+const Socket = require("../models/Socket");
 const Events = require("../utils/events.js");
 
 class UsersController extends AppController {
@@ -31,13 +31,12 @@ class UsersController extends AppController {
                         this.socket.emit(Events.USER_CREATED, {
                             user: {
                                 username: savedUser.username,
-                                password: null,
                                 picture_url: savedUser.picture_url,
                                 last_activity_at: savedUser.last_activity_at
-                            }
+                            },
                         });
 
-                        clientSockets[savedUser.username] = this.socket;
+                        Socket.clientSockets[savedUser.username] = this.socket;
 
                         return this.callback({
                             code: "SUCCESS",
@@ -58,7 +57,7 @@ class UsersController extends AppController {
                         });
                     }
 
-                    clientSockets[user.username] = this.socket;
+                    Socket.clientSockets[user.username] = this.socket;
 
                     return this.callback({
                         code: "SUCCESS",
@@ -90,10 +89,7 @@ class UsersController extends AppController {
     }
 
     disconnect() {
-        for (let socket in clientSockets) {
-            if (clientSockets[socket] === this.socket)
-                delete clientSockets[socket];
-        }
+        Socket.removeSocketFromList(this.socket);
     }
 }
 
