@@ -10,12 +10,13 @@ class ConversationsController extends AppController {
         let payload = this.verifyAuth(token);
         if (!payload) return this.callback({code:"NOT_AUTHENTICATED", data:{}});
 
-        Conversation.findOne({ participants: { "$all" : [payload.username, username]}, type: { "$eq": "one_to_one" } }).then(conversation => {
+        Conversation.findOne({ participants: { "$all" : [payload.username, username]}, type: { "$eq": "one_to_one" } }).then(async conversation => {
             if (conversation === null) {
                 const newConversation = new Conversation({
+                    id: await Conversation.find().count() + 1,
                     type: "one_to_one",
-                    participants: [payload.username, username],
                     messages: [],
+                    participants: [payload.username, username],
                     title: "Nouvelle conversation",
                     theme: "BLUE",
                     updated_at: new Date().toISOString(),
@@ -24,9 +25,7 @@ class ConversationsController extends AppController {
                 });
 
                 newConversation.save().then((savedConversation) => {
-
                     Socket.emitToClients(Events.CONVERSATION_CREATED, savedConversation.participants, {conversation: savedConversation});
-
                     return this.callback({
                         code: "SUCCESS",
                         data: {
@@ -51,9 +50,10 @@ class ConversationsController extends AppController {
 
         let usernamesQuery = [...usernames, payload.username];
 
-        Conversation.find({ participants: { "$all" : usernamesQuery}, type: { "$eq": "many_to_many" } }).then(conversation => {
+        Conversation.find({ participants: { "$all" : usernamesQuery}, type: { "$eq": "many_to_many" } }).then(async conversation => {
             if (conversation.length === 0) {
                 const newConversation = new Conversation({
+                    id: await Conversation.find().count() + 1,
                     type: "many_to_many",
                     participants: usernamesQuery,
                     messages: [],
@@ -65,7 +65,6 @@ class ConversationsController extends AppController {
                 });
 
                 newConversation.save().then((savedConversation) => {
-
                     Socket.emitToClients(Events.CONVERSATION_CREATED, savedConversation.participants, {conversation: savedConversation});
 
                     return this.callback({
@@ -98,6 +97,8 @@ class ConversationsController extends AppController {
                         conversations: conversations,
                     },
                 });
+            } else {
+                return this.callback({code: "NOT_FOUND_CONVERSATION", data: {}});
             }
         });
     }

@@ -1,7 +1,50 @@
 const mongoose = require('mongoose');
-const AutoIncrement = require('mongoose-sequence')(mongoose);
+
+const messageSchema = new mongoose.Schema(({
+    id: {
+        type: Number,
+        required: true
+    },
+    conversation_id: {
+        type: Number,
+        required: true
+    },
+    from: {
+        type: String,
+        required: true
+    },
+    content: {
+        type: String,
+        required: true
+    },
+    posted_at: {
+        type: Date,
+        required: true
+    },
+    delivered_to: {
+        type: Array,
+        required: false
+    },
+    reply_to: this,
+    edited: {
+        type: Boolean,
+        required: true
+    },
+    deleted: {
+        type: Boolean,
+        required: true
+    },
+    reactions: {
+        type: Map,
+        required: true
+    },
+}));
 
 const conversationSchema = mongoose.Schema({
+    id: {
+        type: Number,
+        required: true
+    },
     type: {
         type: String,
         required: true
@@ -10,10 +53,7 @@ const conversationSchema = mongoose.Schema({
         type: Array,
         required: true
     },
-    messages: {
-        type: Array,
-        required: true
-    },
+    messages: [messageSchema],
     title: {
         type: String,
         required: true
@@ -35,6 +75,5 @@ const conversationSchema = mongoose.Schema({
         required: true
     },
 }, { minimize: false });
-conversationSchema.plugin(AutoIncrement, {inc_field: 'id'});
 
 module.exports = mongoose.model('Conversation', conversationSchema);

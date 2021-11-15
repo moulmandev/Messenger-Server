@@ -9,7 +9,8 @@ class Socket {
     }
 
     static emitToClients(event, target, data) {
-        let targets = [...target];
+        let targets = target;
+        if (!Array.isArray(target)) targets = [target];
 
         for (let user in targets) {
             if (targets[user] in Socket.clientSockets)
