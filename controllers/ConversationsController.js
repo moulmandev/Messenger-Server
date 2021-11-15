@@ -1,5 +1,6 @@
 const AppController = require("./AppController.js");
 const Events = require("../utils/events.js")
+const clientSockets = require("../models/Socket.js");
 const Conversation = require("../models/Conversation.js");
 const Socket = require("../models/Socket");
 

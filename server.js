@@ -26,19 +26,19 @@ server.listen(PORT, () => {
 });
 
 io.on("connection", socket => {
-    socket.on(Events.AUTHENTICATE, ({ username, password }, callback) => new UsersController(callback, socket).authenticate(username, password));
+    socket.on(Events.AUTHENTICATE, ({ username, password }, callback) => new UsersController(callback, io).authenticate(username, password, socket));
     
-    socket.on(Events.GET_USERS, ({token}, callback) => new UsersController(callback, socket).getUsers(token));
-    socket.on(Events.CREATE_ONE_TO_ONE_CONVERSATION, ({token, username}, callback) => new ConversationsController(callback, socket).getOrCreateOneToOneConversation(token, username));
-    socket.on(Events.CREATE_MANY_TO_MANY_CONVERSATION, ({token, usernames}, callback) => new ConversationsController(callback, socket).createManyToManyConversation(token, usernames));
-    socket.on(Events.GET_CONVERSATIONS, ({token}, callback) => new ConversationsController(callback, socket).getConversations(token));
+    socket.on(Events.GET_USERS, ({token}, callback) => new UsersController(callback, io).getUsers(token));
+    socket.on(Events.CREATE_ONE_TO_ONE_CONVERSATION, ({token, username}, callback) => new ConversationsController(callback, io).getOrCreateOneToOneConversation(token, username));
+    socket.on(Events.CREATE_MANY_TO_MANY_CONVERSATION, ({token, usernames}, callback) => new ConversationsController(callback, io).createManyToManyConversation(token, usernames));
+    socket.on(Events.GET_CONVERSATIONS, ({token}, callback) => new ConversationsController(callback, io).getConversations(token));
     
-    socket.on(Events.POST_MESSAGE, ({token, conversation_id, content}, callback) => new MessagesController(callback, socket).postMessage(token, conversation_id, content));
-    socket.on(Events.SEE_CONVERSATION, ({token, conversation_id, message_id}, callback) => new MessagesController(callback, socket).seeConversation(token, conversation_id, message_id));
-    socket.on(Events.REPLY_MESSAGE, ({token, conversation_id, message_id, content}, callback) => new MessagesController(callback, socket).replyMessage(token, conversation_id, message_id, content));
-    socket.on(Events.EDIT_MESSAGE, ({token, conversation_id, message_id, content}, callback) => new MessagesController(callback, socket).editMessage(token, conversation_id, message_id, content));
-    socket.on(Events.REACT_MESSAGE, ({token, conversation_id, message_id, reaction}, callback) => new MessagesController(callback, socket).reactMessage(token, conversation_id, message_id, reaction));
-    socket.on(Events.DELETE_MESSAGE, ({token, conversation_id, message_id, content}, callback) => new MessagesController(callback, socket).deleteMessage(token, conversation_id, message_id, content));
+    socket.on(Events.POST_MESSAGE, ({token, conversation_id, content}, callback) => new MessagesController(callback, io).postMessage(token, conversation_id, content));
+    socket.on(Events.SEE_CONVERSATION, ({token, conversation_id, message_id}, callback) => new MessagesController(callback, io).seeConversation(token, conversation_id, message_id));
+    socket.on(Events.REPLY_MESSAGE, ({token, conversation_id, message_id, content}, callback) => new MessagesController(callback, io).replyMessage(token, conversation_id, message_id, content));
+    socket.on(Events.EDIT_MESSAGE, ({token, conversation_id, message_id, content}, callback) => new MessagesController(callback, io).editMessage(token, conversation_id, message_id, content));
+    socket.on(Events.REACT_MESSAGE, ({token, conversation_id, message_id, reaction}, callback) => new MessagesController(callback, io).reactMessage(token, conversation_id, message_id, reaction));
+    socket.on(Events.DELETE_MESSAGE, ({token, conversation_id, message_id, content}, callback) => new MessagesController(callback, io).deleteMessage(token, conversation_id, message_id, content));
 
-    socket.on(Events.DISCONNECT, (reason) => new UsersController(null, socket).disconnect());
+    socket.on(Events.DISCONNECT, (reason) => new UsersController(null, io).disconnect());
 });

@@ -10,7 +10,7 @@ const Events = require("../utils/events.js");
 
 class UsersController extends AppController {
 
-    authenticate(username, password) {
+    authenticate(username, password, clientSocket) {
         let returned = null;
         let token = jwt.sign({
             username: username
